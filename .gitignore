@@ -1,0 +1,35 @@
+# STM32CubeIDE build output
+Debug/
+*.o
+*.d
+*.dd
+*.ln
+*.crf
+*.gdb
+*.pbi
+*.lst
+*.map
+*.elf
+*.bin
+*.hex
+*.s19
+*.axf
+*.srec
+
+# STM32CubeIDE launch configs
+.launch
+
+# IDE
+.settings/
+.project
+.cproject
+.mxproject
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE-generated
+*.swp
+*~
+.core
