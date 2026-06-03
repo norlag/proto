@@ -6,8 +6,8 @@
 [![C](https://img.shields.io/badge/Language-C-azure.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![FATFS](https://img.shields.io/badge/Storage-FATFS-orange.svg)](http://elm-chan.org/fsw/ff/00index_e.html)
 
-![Board overview](https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9)
-![Board detail](https://github.com/user-attachments/assets/bd112ea4-7bae-4670-8bdd-320bb84a3ab9)
+![Board overview](https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9 ':size=600')
+![Board detail](https://github.com/user-attachments/assets/bd112ea4-7bae-4670-8bdd-320bb84a3ab9 ':size=600')
 
 ---
 
@@ -24,20 +24,16 @@
 ## Block Diagram
 
 ```
-+-----------+     +-----------+     +-----------+     +-----------+
-| Coin Cell |---->| TPS61021  |---->| STM32G431 |---->| DMA       |
-| (Vbat/GND)|     | Boost     |     | Cortex-M4 |     | Buffer    |
-+-----------+     +-----------+     +-----+-----+     +-----+-----+
-                                          |                 |
-                                          | I2S2            v
-+-----------+       +-----------+     +-----------+     +-----------+
-| ICS-43434 |---I2S| I2S2      |---->| FATFS     |---->| MicroSD   |
-| (Left)    |       | Philips   |     |           |     | (J2)      |
-+-----------+       +-----------+     +-----+-----+     +-----------+
-+-----------+                          |
-| ICS-43434 |--------------------------+
-| (Right)   |
-+-----------+
+  +-----------+     +-----------+     +-----------+     +-----------+
+  | Coin Cell |---->| TPS61021  |---->| STM32G431 |---->| DMA       |
+  | (Vbat/GND)|     | Boost     |     | Cortex-M4 |     | Buffer    |
+  +-----------+     +-----------+     +-----------+     +-----+-----+
+                                                        |
+                                                        v
+  +-----------+       +-----------+     +-----------+     +-----------+
+  | ICS-43434 |---I2S| I2S2      |---->| FATFS     |---->| MicroSD   |
+  | (L + R)   |       | Philips   |     |           |     | (J2)      |
+  +-----------+       +-----------+     +-----------+     +-----------+
 ```
 
 ## Hardware
