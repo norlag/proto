@@ -1,5 +1,3 @@
-<img width="2816" height="1536" alt="Gemini_Generated_Image_5lepos5lepos5lep" src="https://github.com/user-attachments/assets/9246b036-aa3a-47b6-b367-f38b1950e3fc" />
-
 **Embedded 24-bit stereo audio recorder** coin-cell powered, STM32G431, dual MEMS mics, microSD logging.
 
 [![STM32](https://img.shields.io/badge/MCU-STM32G431-0096c6.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
