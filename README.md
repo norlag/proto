@@ -54,8 +54,8 @@
 |-----|------|-------------|
 | **U1** | STM32G431KBU6 | ARM Cortex-M4, 128 KB Flash, 32 kB RAM, 32-pin UFQFPN |
 | **U2** | TPS61021ADSGR | Boost regulator, 2.3–5.5 V in, 3.3 V out, 3 A |
-| **U3** | ICS-4343434343434343434 | TDK omni-directional MEMS mic, -26 dBFS |
-| **U4** | ICS-4343434343434343434 | TDK omni-directional MEMS mic, -26 dBFS |
+| **U3** | ICS-43434 | TDK omni-directional MEMS mic, -26 dBFS |
+| **U4** | ICS-43434 | TDK omni-directional MEMS mic, -26 dBFS |
 
 ### Connectors
 
