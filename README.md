@@ -3,6 +3,8 @@
 Prototype PCB — STM32G431-based embedded system.
 
 <img width="599" height="596" alt="image" src="https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9" />
+<img width="686" height="540" alt="image" src="https://github.com/user-attachments/assets/bd112ea4-7bae-4670-8bdd-320bb84a3ab9" />
+
 
 ## Overview
 
