@@ -24,7 +24,8 @@ CORE_SRC = Core/Src/main.c \
            Core/Src/stm32g4xx_it.c \
            Core/Src/syscalls.c \
            Core/Src/sysmem.c \
-           Core/Src/system_stm32g4xx.c
+           Core/Src/system_stm32g4xx.c \
+           Core/Src/libc_stub.c
 
 STARTUP  = Core/Startup/startup_stm32g431kbux.s
 
@@ -124,7 +125,6 @@ $(BUILD)/%.s.o: %.s
 $(TARGET): $(OBJ)
 	arm-none-eabi-ld --gc-sections -T$(LDSCRIPT) --print-memory-usage \
 		$(OBJ) \
-		/tmp/libc_stub.o \
 		/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v7e-m+fp/hard/libgcc.a \
 		/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v7e-m+fp/hard/crti.o \
 		/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v7e-m+fp/hard/crtbegin.o \
