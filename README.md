@@ -22,17 +22,41 @@
 
 ## Block Diagram
 
-```
-  +-----------+     +-----------+     +-----------+     +-----------+
-  | Coin Cell |---->| TPS61021  |---->| STM32G431 |---->| DMA       |
-  | (Vbat/GND)|     | Boost     |     | Cortex-M4 |     | Buffer    |
-  +-----------+     +-----------+     +-----------+     +-----+-----+
-                                                              |
-                                                              v
-  +-----------+       +-----------+     +-----------+     +-----------+
-  | ICS-43434 |------>| I2S2      |---->| FATFS     |---->| MicroSD   |
-  | (L + R)   |       | Philips   |     |           |     | (J2)      |
-  +-----------+       +-----------+     +-----------+     +-----------+
+```mermaid
+flowchart LR
+    subgraph Power["Power"]
+        BAT(["Coin Cell<br/>Vbat/GND"])
+        REG(["TPS61021<br/>Boost Regulator"])
+        BAT -->|"3.3V"| REG -->|"3.3V"| MCU
+    end
+
+    subgraph Audio["Audio Input"]
+        MIC_L["ICS-43434<br/>(Left)"]
+        MIC_R["ICS-43434<br/>(Right)"]
+    end
+
+    subgraph MCU["STM32G431KBU6"]
+        I2S["I2S2<br/>Philips Mode<br/>24-bit / 48kHz"]
+        DMA["DMA Buffer"]
+        FFS["FATFS"]
+        MCU --> I2S --> DMA --> FFS
+    end
+
+    subgraph Storage["Storage"]
+        SD["MicroSD<br/>(J2)"]
+    end
+
+    subgraph Peripherals["Peripherals"]
+        LED["LED (PA7)"]
+        SW2["SW2 (Reset)"]
+    end
+
+    MIC_L -->|"I2S2 WS+SD+CK"| I2S
+    MIC_R -->|"I2S2"| I2S
+    FFS -->|"SPI1"| SD
+
+    MCU -.-> LED
+    MCU -.-> SW2
 ```
 
 ## Hardware
