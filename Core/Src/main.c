@@ -685,7 +685,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PB7 */
   GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;  // Button needs pull-up
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -752,8 +752,8 @@ void Error_Handler(void)
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
-  * @param file: pointer to the source file name
-  * @param line: assert_param error line source number
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
