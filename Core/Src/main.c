@@ -52,11 +52,14 @@ SPI_HandleTypeDef hspi1;
 #define NUM_STEREO_FRAMES 1000  // Increased to 1000 to prevent SD card lag
 
 uint16_t mic_rx_buffer[NUM_STEREO_FRAMES * 4];
-int32_t stereo_audio[NUM_STEREO_FRAMES * 2]; // One interleaved array for both mics
+int32_t stereo_audio[NUM_STEREO_FRAMES * 2]; // Processed 16-bit samples (interleaved)
+
+// 24-bit output buffer: 3 bytes per sample, 6 bytes per stereo frame
+uint8_t audio_24bit[NUM_STEREO_FRAMES * 2 * 3];
 
 volatile uint8_t data_ready_flag = 0;
 
-// Standard 44-byte WAV header for 48kHz, Stereo, 32-bit PCM
+// Standard 44-byte WAV header for 48kHz, Stereo, 24-bit PCM
 uint8_t wav_header[44] = {
     'R', 'I', 'F', 'F',
     0, 0, 0, 0,             // [4-7] Total File Size (filled in later)
@@ -66,9 +69,9 @@ uint8_t wav_header[44] = {
     1, 0,                   // AudioFormat (1 = PCM)
     2, 0,                   // NumChannels (2 = Stereo)
     0x80, 0xBB, 0x00, 0x00, // SampleRate (48000 Hz)
-    0x00, 0xDC, 0x05, 0x00, // ByteRate (48000 * 2 channels * 4 bytes = 384000)
-    8, 0,                   // BlockAlign (2 channels * 4 bytes = 8)
-    32, 0,                  // BitsPerSample (32 bits)
+    0x00, 0x70, 0x03, 0x00, // ByteRate (48000 * 2 channels * 3 bytes = 288000)
+    6, 0,                   // BlockAlign (2 channels * 3 bytes = 6)
+    24, 0,                  // BitsPerSample (24 bits)
     'd', 'a', 't', 'a',
     0, 0, 0, 0              // [40-43] Data Size (filled in later)
 };
@@ -163,48 +166,72 @@ int main(void)
 		  int sample_index = 0;
 
 		  // 1. Process the Audio
+		  // HAL I2S 24-bit + HALFWORD DMA: each 24-bit sample = 2 x 16-bit words
+		  //   buffer[i]   = low 16 bits, buffer[i+1] = high 8 bits (sign-extend via int8_t)
 		  for (int i = 0; i < (NUM_STEREO_FRAMES * 4); i += 4)
 		  {
-			  int32_t raw_left = ((int32_t)mic_rx_buffer[i] << 16) | (uint32_t)mic_rx_buffer[i + 1];
-			  int32_t raw_right = ((int32_t)mic_rx_buffer[i + 2] << 16) | (uint32_t)mic_rx_buffer[i + 3];
+		  int32_t raw_left  = (((int32_t)(int8_t)mic_rx_buffer[i + 1]) << 16) | ((uint32_t)(uint16_t)mic_rx_buffer[i]);
+		  int32_t raw_right = (((int32_t)(int8_t)mic_rx_buffer[i + 3]) << 16) | ((uint32_t)(uint16_t)mic_rx_buffer[i + 2]);
 
-			  // Interleave Left then Right directly into the output array
-			  stereo_audio[sample_index++] = raw_left >> 8;
-			  stereo_audio[sample_index++] = raw_right >> 8;
+		  // Convert 24-bit -> 16-bit (drop 8 LSB) and store as 16-bit interleaved
+		  stereo_audio[sample_index++] = raw_left >> 8;
+		  stereo_audio[sample_index++] = raw_right >> 8;
+		  }
+
+		  // 2. Convert 16-bit samples to 24-bit for WAV output (3 bytes per sample)
+		  for (int i = 0; i < NUM_STEREO_FRAMES * 2; i++)
+		  {
+		  int32_t s = stereo_audio[i];
+		  // Clamp to 16-bit range
+		  if (s > 32767) s = 32767;
+		  if (s < -32768) s = -32768;
+		  int16_t sample = (int16_t)s;
+		  // Write 3 bytes (little-endian, no padding)
+		  int idx = i * 3;
+		  audio_24bit[idx]     = (uint8_t)(sample & 0xFF);
+		  audio_24bit[idx + 1] = (uint8_t)((sample >> 8) & 0xFF);
+		  audio_24bit[idx + 2] = 0x00; // 24-bit padding (sign bit already 0 for positive)
+		  }
+		  // Fix sign bit for negative samples (byte 3 = 0xFF for negative)
+		  for (int i = 0; i < NUM_STEREO_FRAMES * 2; i++)
+		  {
+		  if (stereo_audio[i] < 0) {
+		  audio_24bit[i * 3 + 2] = 0xFF;
+		  }
 		  }
 
 		  data_ready_flag = 0; // Reset flag so DMA can catch the next batch
 
-		  // 2. Save Audio to SD Card
+		  // 3. Save Audio to SD Card (24-bit PCM: 3 bytes/sample, 6 bytes/stereo frame)
 		  if (record_counter < MAX_RECORD_LOOPS)
 		  {
-			  // Write the processed 1000 stereo frames (8000 bytes)
-			  f_write(&fil, stereo_audio, sizeof(stereo_audio), &bw);
-			  total_data_bytes += bw;
-			  record_counter++;
+		  uint32_t bytes_to_write = NUM_STEREO_FRAMES * 2 * 3; // 6000 bytes per loop
+		  f_write(&fil, audio_24bit, bytes_to_write, &bw);
+		  total_data_bytes += bw;
+		  record_counter++;
 
-			  // 3. If 5 seconds have passed, finalize the file!
-			  if (record_counter == MAX_RECORD_LOOPS)
-			  {
-				  // Stop the microphones
-				  HAL_I2S_DMAStop(&hi2s2);
+		  // 4. If 5 seconds have passed, finalize the file!
+		  if (record_counter == MAX_RECORD_LOOPS)
+		  {
+		  // Stop the microphones
+		  HAL_I2S_DMAStop(&hi2s2);
 
-				  // Seek back to the header and write the exact file sizes
-				  uint32_t file_size = total_data_bytes + 36;
+		  // Seek back to the header and write the exact file sizes
+		  uint32_t file_size = total_data_bytes + 36;
 
-				  f_lseek(&fil, 4);
-				  f_write(&fil, &file_size, 4, &bw);
+		  f_lseek(&fil, 4);
+		  f_write(&fil, &file_size, 4, &bw);
 
-				  f_lseek(&fil, 40);
-				  f_write(&fil, &total_data_bytes, 4, &bw);
+		  f_lseek(&fil, 40);
+		  f_write(&fil, &total_data_bytes, 4, &bw);
 
-				  // Close and unmount
-				  f_close(&fil);
-				  f_mount(NULL, "", 1);
+		  // Close and unmount
+		  f_close(&fil);
+		  f_mount(NULL, "", 1);
 
-				  // Turn OFF LED to show it is safe to remove the SD card
-				  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-			  }
+		  // Turn OFF LED to show it is safe to remove the SD card
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+		  }
 		  }
 	  }
     /* USER CODE END WHILE */

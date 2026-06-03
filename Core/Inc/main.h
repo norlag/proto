@@ -42,6 +42,11 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
+/* SD Card SPI - uses SPI1 (PB3/SCK, PB4/MISO, PB5/MOSI) */
+#define SD_SPI_HANDLE       hspi1
+#define SD_CS_GPIO_Port     GPIOA
+#define SD_CS_Pin           GPIO_PIN_4
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

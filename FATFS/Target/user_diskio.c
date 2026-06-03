@@ -2,8 +2,8 @@
 /**
  ******************************************************************************
   * @file    user_diskio.c
-  * @brief   This file includes a diskio driver skeleton to be completed by the user.
-  ******************************************************************************
+  * @brief   This file includes the SPI-based SD card diskio driver.
+ ******************************************************************************
   * @attention
   *
   * Copyright (c) 2026 STMicroelectronics.
@@ -35,6 +35,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "ff_gen_drv.h"
+#include "user_diskio_spi.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -81,8 +82,8 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
-    Stat = STA_NOINIT;
-    return Stat;
+  Stat = USER_SPI_initialize(pdrv);
+  return Stat;
   /* USER CODE END INIT */
 }
 
@@ -96,8 +97,8 @@ DSTATUS USER_status (
 )
 {
   /* USER CODE BEGIN STATUS */
-    Stat = STA_NOINIT;
-    return Stat;
+  Stat = USER_SPI_status(pdrv);
+  return Stat;
   /* USER CODE END STATUS */
 }
 
@@ -117,7 +118,7 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-    return RES_OK;
+  return USER_SPI_read(pdrv, buff, sector, count);
   /* USER CODE END READ */
 }
 
@@ -138,8 +139,7 @@ DRESULT USER_write (
 )
 {
   /* USER CODE BEGIN WRITE */
-  /* USER CODE HERE */
-    return RES_OK;
+  return USER_SPI_write(pdrv, buff, sector, count);
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */
@@ -159,9 +159,7 @@ DRESULT USER_ioctl (
 )
 {
   /* USER CODE BEGIN IOCTL */
-    DRESULT res = RES_ERROR;
-    return res;
+  return USER_SPI_ioctl(pdrv, cmd, buff);
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */
-
