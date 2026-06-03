@@ -179,9 +179,8 @@ SECTIONS
   /* Remove information from the compiler libraries */
   /DISCARD/ :
   {
-    libc.a ( * )
-    libm.a ( * )
-    libgcc.a ( * )
+    *(.ARM.exidx*)
+    *(.ARM.extab*)
   }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
