@@ -22,8 +22,6 @@
 
 ## Block Diagram
 
-Generated with [`ascii_diagram_gen.py`](scripts/ascii_diagram_gen.py):
-
 ```
 +------------------------------+
 |        POWER SUPPLY        |
