@@ -1,6 +1,6 @@
 # Proto
 
-**Embedded 24-bit stereo audio recorder** — coin-cell powered, STM32G431, dual MEMS mics, microSD logging.
+**Embedded 24-bit stereo audio recorder** coin-cell powered, STM32G431, dual MEMS mics, microSD logging.
 
 [![STM32](https://img.shields.io/badge/MCU-STM32G431-0096c6.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
 [![C](https://img.shields.io/badge/Language-C-azure.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
@@ -78,8 +78,8 @@
 |-------|-----------|
 | **MCU** | STM32G431KBU6 (ARM Cortex-M4 @ 170 MHz) |
 | **Drivers** | STM32 HAL (I2S, SPI, DMA, GPIO) |
-| **File System** | FATFS (ChaN) |
-| **Language** | C (ANSI/ISO) |
+| **File System** | FATFS |
+| **Language** | C |
 | **IDE** | STM32CubeIDE (make-based) |
 
 ### Audio Pipeline
