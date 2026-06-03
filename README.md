@@ -129,5 +129,5 @@ proto/
 
 - [STM32G431 Product Page](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
 - [TPS61021 Datasheet (TI)](https://www.ti.com/lit/ds/symlink/tps61021a.pdf)
-- [ICS-43434 Datasheet (TDK)](https://www.tdk.com/en/tech-mag/mems-microphone/ics-43434)
+- [ICS-43434 Datasheet (TDK)](https://product.tdk.com/en/search/sw_piezo/mic/mems-mic/info?part_no=ICS-43434)
 - [FATFS Documentation](http://elm-chan.org/fsw/ff/00index_e.html)
