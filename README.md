@@ -24,31 +24,31 @@
 ## Block Diagram
 
 ```
-+----------------+     +----------------+     +----------------+
-|  Coin Cell     |---->|  TPS61021      |---->|  STM32G431     |
-|  (Vbat/GND)    |     |  Boost Reg.    |     |  (Cortex-M4)   |
-+----------------+     +----------------+     +----------------+
-                                                       |
-          +----------------------------------+         |
-          |  ICS-43434 (L)                    |         |
-          |  ICS-43434 (R)                    |         |
-          +----------------------------------+         |
-                                                       v
-                              +----------------+
-                              |  I2S (Philips) |
-                              |  STM32 I2S2    |
-                              +----------------+
-                                       |
-                                       v
-                              +----------------+
-                              |  DMA + FATFS   |----> MicroSD (J2)
-                              +----------------+
-                                       |
-                                       v
-                              +----------------+
-                              |  LED (PA7)     |
-                              |  SW2 (RESET)   |
-                              +----------------+
++-----------+     +-----------+     +-----------+
+| Coin Cell |---->| TPS61021  |---->| STM32G431 |
+| (Vbat/GND)|     | Boost     |     | Cortex-M4 |
++-----------+     +-----------+     +-----------+
+                                          |
++-----------+                             |
+| ICS-43434 |---+                         |
+| (Left)    |   |                         |
++-----------+   |                         |
++-----------+   |   +-----------+         |
+| ICS-43434 |---+-->| I2S2      |---------+
+| (Right)   |       | Philips   |
++-----------+       +-----------+
+                        |
+                        v
+                +-----------+
+                | DMA +     |----> MicroSD (J2)
+                | FATFS     |
+                +-----------+
+                        |
+                        v
+                +-----------+
+                | LED (PA7) |
+                | SW2 (RST) |
+                +-----------+
 ```
 
 ## Hardware
@@ -64,18 +64,18 @@
 
 ### Connectors
 
-| Ref | Type | Description |
-|-----|------|-------------|
-| **J1** | 3×2.54 mm | Vbat / GND — coin cell input |
-| **J2** | Hirose DM3NW-SF-PEJ(800) | MicroSD push-push SMD |
-| **J3** | 10×1.27 mm | SWCLK + SDIO — debugging & programming |
+| Ref | Description |
+|-----|-------------|
+| **J1** | 3×2.54 mm — Vbat / GND, coin cell input |
+| **J2** | Hirose DM3NW-SF-PEJ(800) — MicroSD push-push SMD |
+| **J3** | 10×1.27 mm — SWCLK + SDIO, debugging & programming |
 
 ### Switches
 
-| Ref | Part | Function |
-|-----|------|----------|
-| **SW1** | TE 1825282-1 | Slide switch — boost regulator ON/OFF |
-| **SW2** | E-Switch TL3901AGQF180 | Tactile push button — MCU reset |
+| Ref | Description |
+|-----|-------------|
+| **SW1** | TE 1825282-1 — Slide switch, boost regulator ON/OFF |
+| **SW2** | E-Switch TL3901AGQF180 — Tactile push button, MCU reset |
 
 ## Software
 
