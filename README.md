@@ -7,7 +7,6 @@
 [![FATFS](https://img.shields.io/badge/Storage-FATFS-orange.svg)](http://elm-chan.org/fsw/ff/00index_e.html)
 
 ![Board overview](https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9 ':size=600')
-![Board detail](https://github.com/user-attachments/assets/bd112ea4-7bae-4670-8bdd-320bb84a3ab9 ':size=600')
 
 ---
 
@@ -28,10 +27,10 @@
   | Coin Cell |---->| TPS61021  |---->| STM32G431 |---->| DMA       |
   | (Vbat/GND)|     | Boost     |     | Cortex-M4 |     | Buffer    |
   +-----------+     +-----------+     +-----------+     +-----+-----+
-                                                        |
-                                                        v
+                                                              |
+                                                              v
   +-----------+       +-----------+     +-----------+     +-----------+
-  | ICS-43434 |---I2S| I2S2      |---->| FATFS     |---->| MicroSD   |
+  | ICS-43434 |------>| I2S2      |---->| FATFS     |---->| MicroSD   |
   | (L + R)   |       | Philips   |     |           |     | (J2)      |
   +-----------+       +-----------+     +-----------+     +-----------+
 ```
