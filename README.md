@@ -2,6 +2,8 @@
 
 Prototype PCB — STM32G431-based embedded system.
 
+<img width="599" height="596" alt="image" src="https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9" />
+
 ## Overview
 
 CubeIDE project (make-based) for a custom STM32G431 board with microphone input,
@@ -16,16 +18,6 @@ microSD storage, battery backup, and user interface LEDs/switches.
 | **U3** | ICS-43434 | TDK — Omni-directional MEMS Microphone, -26 dB |
 | **U4** | ICS-43434 | TDK — Omni-directional MEMS Microphone, -26 dB |
 
-### Passive & Passive-like Components
-
-- **BT1** — Keystone 1063: Coin cell battery holder (20 mm, 1-2 cells)
-- **C1-C3** — MLCC capacitors (10 uF / 47 uF / 220 pF)
-- **C4-C10** — Samsung CL21B104KBCNNNC: 100 nF 0805 (x7)
-- **L1** — Murata DFE252012P-R47M: 0.47 uH shielded inductor (boost converter)
-- **R1-R15** — Resistors: 10 k, 390, 100 k, 316 k, 1 k
-- **D1** — Nexperia PESD3V3L1UB: TVS diode 3.3 V SOD523
-- **D2-D6** — Diodes Inc. LTL-1CHEE: Red LEDs (T/H, x5)
-
 ### Connectors & I/O
 
 - **J1** — Samtec MTLW-103-07-G-S-230: 3-pos vertical header 2.54 mm
@@ -34,36 +26,9 @@ microSD storage, battery backup, and user interface LEDs/switches.
 - **SW1** — TE 1825282-1: Slide switch SPDT
 - **SW2** — E-Switch TL3901AGQF180: Tactile push button
 
-## Project Structure
-
-```
-Core/
-  Inc/            -- HAL header files
-  Src/            -- HAL source files
-  Startup/        -- Startup assembly files
-Drivers/
-  CMSIS/          -- ST Cube HAL + CMSIS
-  STM32G4xx_HAL_Driver/
-FATFS/
-  App/            -- FatFS application layer
-  Target/         -- FatFS target (SDMMC)
-Middlewares/
-  Third_Party/    -- Third-party libraries (FatFS)
-Debug/            -- Makefile, linker script, build objects
-STM32G431KBUX_FLASH.ld  -- Linker script
-cubemx.ioc        -- STM32CubeMX project
-```
-
 ## Build
 
 Open `cubemx.ioc` in STM32CubeMX to regenerate code, then open the project
-in STM32CubeIDE or build from command line:
-
-```bash
-cd Debug
-make -j$(nproc)
-```
-
-## BOM
+in STM32CubeIDE
 
 Full bill of materials exported from Altium: `proto.csv`
