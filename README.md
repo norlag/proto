@@ -22,41 +22,45 @@
 
 ## Block Diagram
 
-```mermaid
-flowchart LR
-    subgraph Power["Power"]
-        BAT(["Coin Cell<br/>Vbat/GND"])
-        REG(["TPS61021<br/>Boost Regulator"])
-        BAT -->|"3.3V"| REG -->|"3.3V"| MCU
-    end
+Generated with [`ascii_diagram_gen.py`](scripts/ascii_diagram_gen.py):
 
-    subgraph Audio["Audio Input"]
-        MIC_L["ICS-43434<br/>(Left)"]
-        MIC_R["ICS-43434<br/>(Right)"]
-    end
-
-    subgraph MCU["STM32G431KBU6"]
-        I2S["I2S2<br/>Philips Mode<br/>24-bit / 48kHz"]
-        DMA["DMA Buffer"]
-        FFS["FATFS"]
-        MCU --> I2S --> DMA --> FFS
-    end
-
-    subgraph Storage["Storage"]
-        SD["MicroSD<br/>(J2)"]
-    end
-
-    subgraph Peripherals["Peripherals"]
-        LED["LED (PA7)"]
-        SW2["SW2 (Reset)"]
-    end
-
-    MIC_L -->|"I2S2 WS+SD+CK"| I2S
-    MIC_R -->|"I2S2"| I2S
-    FFS -->|"SPI1"| SD
-
-    MCU -.-> LED
-    MCU -.-> SW2
+```
++------------------------------+
+|        POWER SUPPLY        |
+|     Coin Cell 3V (J1)      |
++------------------------------+
+      |
+      v
++------------------------------+
+|           BOOST            |
+|          TPS61021          |
++------------------------------+
+      | 3.3V
+      v
++------------------------------+
+|       STM32G431KBU6        |
+|      Cortex-M4 170MHz      |
++------------------------------+
+      |
+      | I2S2 (WS=PF0, CK=PF1, SD=PA11)
+      | SPI1 (SCK=PB3, MISO=PB4, MOSI=PB5)
+      | GPIO (BUTTON=PB7, LED=PA7)
+      v
+      +------------------------------+            +------------------------------+
+      |         ICS-43434          |            |         ICS-43434          |
+      |          Left Mic          |            |         Right Mic          |
+      +------------------------------+            +------------------------------+
+      |
+      | SPI1 (PA4 CS)
+      v
++------------------------------+
+|        microSD Card        |
+|        SPI (PA4 CS)        |
++------------------------------+
+      +------------------------------+            +------------------------------+
+      |           BUTTON           |            |            LED             |
+      |            PB7             |            |            PA7             |
+      +------------------------------+            +------------------------------+
 ```
 
 ## Hardware
