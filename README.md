@@ -2,12 +2,11 @@
 
 **Embedded 24-bit stereo audio recorder** — coin-cell powered, STM32G431, dual MEMS mics, microSD logging.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![STM32](https://img.shields.io/badge/MCU-STM32G431-0096c6.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
 [![C](https://img.shields.io/badge/Language-C-azure.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![FATFS](https://img.shields.io/badge/Storage-FATFS-orange.svg)](http://elm-chan.org/fsw/ff/00index_e.html)
 
-![Board overview](https://github.com/norlag/proto/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9)
+![Board overview](https://github.com/user-attachments/assets/6882d186-b1bd-4c36-b714-b6d0aef492f9)
 ![Board detail](https://github.com/user-attachments/assets/bd112ea4-7bae-4670-8bdd-320bb84a3ab9)
 
 ---
@@ -18,7 +17,7 @@
 - **Battery powered** — runs from a single coin cell via J1 (Vbat/GND) with TPS61021 boost regulator
 - **SD card logging** — FATFS-based WAV file storage on microSD (J2)
 - **Timestamped filenames** — auto-generated `YYMMDD_HHMMSS.WAV`
-- **Button-controlled** — SW2 (RESET) for power-on reset; slide switch SW1 controls boost regulator
+- **Slide switch power** — SW1 controls boost regulator ON/OFF; SW2 handles MCU reset
 - **Low power** — STM32G431 with DMA-driven I2S capture, minimal CPU involvement
 - **Compact footprint** — custom PCB in 32-pin UFQFPN form factor
 
@@ -27,23 +26,22 @@
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │  Coin Cell   │────▶│  TPS61021    │────▶│  STM32G431   │
-│  (Vbat/GND)  │     │  Boost Reg.  │     │  STM32G431   │
-└──────────────┘     └──────────────┘     │  (32-bit ARM)│
+│  (Vbat/GND)  │     │  Boost Reg.  │     │  (Cortex-M4) │
+└──────────────┘     └──────────────┘     │              │
                                           │              │
 ┌──────────────┐     ┌──────────────┐     │  ┌────┐ ┌───┐│
-│  ICS-43434   │────▶│  I2S (Phil.) │────▶│  │ DMA│ │FAT││──▶│  MicroSD  │
-│  (Left Mic)  │     │  STM32 I2S2  │     │  └────┘ └───┘│   │  (J2)     │
-└──────────────┘     └──────────────┘     │              │
-                                          │  ┌────┐ ┌───┐│
-┌──────────────┐     ┌──────────────┐     │  │ I2S│ │SD ││
-│  ICS-43434   │────▶│  I2S (Phil.) │────▶│  └────┘ └───┘│
-│  (Right Mic) │     │  STM32 I2S2  │     └──────┬───────┘
-└──────────────┘     └──────────────┘            │
-                                                 ▼
-                                         ┌──────────────┐
-                                         │  LED (PA7)   │
-                                         │  SW2 (PB7)   │
-                                         └──────────────┘
+│  ICS-43434   │     │              │     │  │ DMA│ │FAT││──▶│  MicroSD  │
+│  (Left Mic)  │────▶│  I2S (Phil.) │────▶│  └────┘ └───┘│   │  (J2)     │
+└──────────────┘     │  STM32 I2S2  │     │              │
+                     │              │     │              │
+┌──────────────┐     │              │     └──────┬───────┘
+│  ICS-43434   │────▶│              │            │
+│  (Right Mic) │     └──────────────┘            │
+└──────────────┘                                ▼
+                                        ┌──────────────┐
+                                        │  LED (PA7)   │
+                                        │  SW2 (RESET) │
+                                        └──────────────┘
 ```
 
 ## Hardware
@@ -123,11 +121,7 @@ proto/
 
 ## References
 
-- [STM32G431 Datasheet](https://www.st.com/resource/en/datasheet/stm32g431kb.pdf)
-- [TPS61021 Datasheet](https://www.ti.com/lit/ds/symlink/tps61021.pdf)
-- [ICS-43434 Datasheet](https://www.tdk.com/en/tech-mag/audio/2019-07)
+- [STM32G431 Product Page](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
+- [TPS61021 Datasheet (TI)](https://www.ti.com/lit/ds/symlink/tps61021a.pdf)
+- [ICS-43434 Datasheet (TDK)](https://www.tdk.com/en/tech-mag/mems-microphone/ics-43434)
 - [FATFS Documentation](http://elm-chan.org/fsw/ff/00index_e.html)
-
-## License
-
-MIT License — see [LICENSE](LICENSE) file.
